@@ -1,3 +1,4 @@
+import 'package:dice_roll_game/screens/game_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,18 +19,5 @@ class MyApp extends StatelessWidget {
       ),
       home: const GamePage(),
     );
-  }
-}
-
-class GamePage extends StatefulWidget {
-  const GamePage({super.key});
-
-  @override
-  State<GamePage> createState() => _GamePageState();
-}
-
-class _GamePageState extends State<GamePage> {
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('DICEROLL')));
   }
 }
