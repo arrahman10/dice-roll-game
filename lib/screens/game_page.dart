@@ -14,7 +14,10 @@ class _GamePageState extends State<GamePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Image.asset('assets/images/d5.png')],
+          children: [
+            Text('My Dice Game', style: TextStyle(fontSize: 50)),
+            Image.asset('assets/images/d5.png'),
+          ],
         ),
       ),
     );

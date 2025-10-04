@@ -1,5 +1,8 @@
-import 'package:dice_roll_game/screens/game_page.dart';
 import 'package:flutter/material.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+
+import 'package:dice_roll_game/screens/game_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        textTheme: GoogleFonts.russoOneTextTheme(),
       ),
       home: const GamePage(),
     );
