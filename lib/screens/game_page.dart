@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'package:dice_roll_game/models/game_status.dart';
 import 'package:dice_roll_game/screens/start_page.dart';
 import 'package:dice_roll_game/utils/dice_assets.dart';
 import 'package:dice_roll_game/widgets/dice_button.dart';
@@ -14,8 +15,9 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  static const String win = 'You Win!!!';
-  static const String lost = 'You Lost!!!';
+  static const String winMessage = 'You Win!!!';
+  static const String loseMessage = 'You Lost!!!';
+  GameStatus gameStatus = GameStatus.none;
   String result = '';
   int index1 = 0, index2 = 0, diceSum = 0, target = 0;
   final random = Random.secure();
@@ -46,9 +48,17 @@ class _GamePageState extends State<GamePage> {
                       'Your target: $target\nKeep rolling to match $target',
                       style: const TextStyle(fontSize: 27),
                     ),
-                  Text(result, style: const TextStyle(fontSize: 50)),
-                  DiceButton(onPressed: rollTheDice, label: 'ROLL'),
-                  DiceButton(onPressed: reset, label: 'RESET'),
+
+                  // Show result text only when game is over
+                  if (gameStatus == GameStatus.over)
+                    Text(result, style: const TextStyle(fontSize: 50)),
+
+                  // Show roll button only during running game
+                  if (gameStatus == GameStatus.running)
+                    DiceButton(onPressed: rollTheDice, label: 'ROLL'),
+                  // Show reset button only when game is over
+                  if (gameStatus == GameStatus.over)
+                    DiceButton(onPressed: reset, label: 'RESET'),
                 ],
               )
             : StartPage(onStart: showGameBoard),
@@ -73,18 +83,21 @@ class _GamePageState extends State<GamePage> {
   // Checks win/loss on target matching after first roll
   void checkTarget() {
     if (diceSum == target) {
-      result = win;
+      result = winMessage;
     } else if (diceSum == 7) {
-      result = lost;
+      result = loseMessage;
+      gameStatus = GameStatus.over;
     }
   }
 
   // Logic to evaluate first roll outcome (win/loss/target)
   void checkFirstRoll() {
     if (diceSum == 7 || diceSum == 11) {
-      result = win;
+      result = winMessage;
+      gameStatus = GameStatus.over;
     } else if (diceSum == 2 || diceSum == 3 || diceSum == 12) {
-      result = lost;
+      result = loseMessage;
+      gameStatus = GameStatus.over;
     } else {
       hasTarget = true;
       target = diceSum;
@@ -94,19 +107,25 @@ class _GamePageState extends State<GamePage> {
   // Resets all game state and UI flags
   void reset() {
     setState(() {
-      index1 = 0;
-      index2 = 0;
-      diceSum = 0;
-      target = 0;
-      result = '';
-      hasTarget = false;
-      shouldShowBoard = false;
+      resetGameState();
     });
+  }
+
+  void resetGameState() {
+    index1 = 0;
+    index2 = 0;
+    diceSum = 0;
+    target = 0;
+    result = '';
+    hasTarget = false;
+    shouldShowBoard = false;
+    gameStatus = GameStatus.none;
   }
 
   void showGameBoard() {
     setState(() {
       shouldShowBoard = true;
+      gameStatus = GameStatus.running;
     });
   }
 }
