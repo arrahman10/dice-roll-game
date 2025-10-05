@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
+import 'package:dice_roll_game/screens/start_page.dart';
 import 'package:dice_roll_game/utils/dice_assets.dart';
+import 'package:dice_roll_game/widgets/dice_button.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -17,34 +19,39 @@ class _GamePageState extends State<GamePage> {
   String result = '';
   int index1 = 0, index2 = 0, diceSum = 0, target = 0;
   final random = Random.secure();
-  bool hasTarget = false;
+  bool hasTarget = false, shouldShowBoard = false;
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('DICEROLL')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(diceList[index1], width: 100, height: 100),
-                const SizedBox(width: 10),
-                Image.asset(diceList[index2], width: 100, height: 100),
-              ],
-            ),
-            Text('Dice Sum: $diceSum', style: const TextStyle(fontSize: 25)),
-            if (hasTarget)
-              Text(
-                'Your target: $target\nKeep rolling to match $target',
-                style: const TextStyle(fontSize: 27),
-              ),
-            Text(result, style: const TextStyle(fontSize: 50)),
-            ElevatedButton(onPressed: rollTheDice, child: const Text('ROLL')),
-            ElevatedButton(onPressed: reset, child: const Text('RESET')),
-          ],
-        ),
+        child: shouldShowBoard
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(diceList[index1], width: 100, height: 100),
+                      const SizedBox(width: 10),
+                      Image.asset(diceList[index2], width: 100, height: 100),
+                    ],
+                  ),
+                  Text(
+                    'Dice Sum: $diceSum',
+                    style: const TextStyle(fontSize: 25),
+                  ),
+                  if (hasTarget)
+                    Text(
+                      'Your target: $target\nKeep rolling to match $target',
+                      style: const TextStyle(fontSize: 27),
+                    ),
+                  Text(result, style: const TextStyle(fontSize: 50)),
+                  DiceButton(onPressed: rollTheDice, label: 'ROLL'),
+                  DiceButton(onPressed: reset, label: 'RESET'),
+                ],
+              )
+            : StartPage(onStart: showGameBoard),
       ),
     );
   }
@@ -93,6 +100,13 @@ class _GamePageState extends State<GamePage> {
       target = 0;
       result = '';
       hasTarget = false;
+      shouldShowBoard = false;
+    });
+  }
+
+  void showGameBoard() {
+    setState(() {
+      shouldShowBoard = true;
     });
   }
 }
