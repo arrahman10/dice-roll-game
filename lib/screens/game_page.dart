@@ -48,11 +48,9 @@ class _GamePageState extends State<GamePage> {
                       'Your target: $target\nKeep rolling to match $target',
                       style: const TextStyle(fontSize: 27),
                     ),
-
                   // Show result text only when game is over
                   if (gameStatus == GameStatus.over)
                     Text(result, style: const TextStyle(fontSize: 50)),
-
                   // Show roll button only during running game
                   if (gameStatus == GameStatus.running)
                     DiceButton(onPressed: rollTheDice, label: 'ROLL'),
@@ -84,6 +82,7 @@ class _GamePageState extends State<GamePage> {
   void checkTarget() {
     if (diceSum == target) {
       result = winMessage;
+      gameStatus = GameStatus.over;
     } else if (diceSum == 7) {
       result = loseMessage;
       gameStatus = GameStatus.over;
